@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+    <script src="https://unpkg.com/obniz@3.16.0/obniz.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+      <div id="obniz-debug"></div>
+      <!--カメラ映像<iframe src="http://192.168.137.78" width="1000" height="300"></iframe>-->
+      <button id="up" style="width:150px;height:100px;font-size:50px;margin:30px 200px 10px 160px;">↑</button><br>
+      <button id="left" style="width:150px;height:100px;font-size:50px;margin-right:170px;">←</button>
+      <button id="right" style="width:150px;height:100px;font-size:50px;margin-bottom:10px;margin-right:500px;">→</button>
+      <label><input id="slider" type="range"  value="20" min="20" max="120" step="10" style="width:300px;" />アーム</label><br>
+      <button id="down" style="width:150px;height:100px;font-size:50px;margin-left:160px;">↓</button>
+
+    <!--ここからjs-->
+    <script>
+    var obniz = new Obniz("OBNIZ_ID_HERE");
+    var anglecount1=20;
+    var anglecount2=150
+    obniz.onconnect = async function () {
+    //左側サーボモータ
+    var leftservo = obniz.wired("ServoMotor", {gnd:0, vcc:1, signal:2});
+    //右側サーボモータ
+    var rightservo = obniz.wired("ServoMotor", {gnd:9, vcc:10, signal:11});
+    var motor1 = obniz.wired("DCMotor", {forward:4 , back:3 });
+    var motor2 = obniz.wired("DCMotor", {forward:8 , back:7 });
+    leftservo.angle(anglecount1);
+    rightservo.angle(anglecount2);
+    //アーム
+    $("#slider").on('input', function() {
+      if($("#slider").val()==20){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+130);
+      };
+      if($("#slider").val()==30){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+110);
+      };
+      if($("#slider").val()==40){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+90);
+      };
+      if($("#slider").val()==50){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+70);
+      };
+      if($("#slider").val()==60){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+50);
+      };
+      if($("#slider").val()==70){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+100);
+      };
+      if($("#slider").val()==80){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()+10);
+      };
+      if($("#slider").val()==90){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()-10);
+      };
+      if($("#slider").val()==100){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()-30);
+      };
+      if($("#slider").val()==110){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()-50);
+      };
+      if($("#slider").val()==120){
+        leftservo.angle($("#slider").val());
+        rightservo.angle($("#slider").val()-70);
+      };
+    });
+    //左
+    $("#left").on("touchstart mousedown",()=>{
+      motor1.forward();
+    });
+    $("#left").on("touchend mouseup",()=>{
+      motor1.stop();
+    });
+    //右
+    $("#right").on("touchstart mousedown",()=>{
+      motor2.forward();
+    });
+    $("#right").on("touchend mouseup",()=>{
+      motor2.stop();
+    });
+    //上
+    $("#up").on("touchstart mousedown",()=>{
+      motor1.forward();
+      motor2.forward();
+    });
+    $("#up").on("touchend mouseup",()=>{
+      motor1.stop();
+      motor2.stop();
+    });
+    //下
+    $("#down").on("touchstart mousedown",()=>{
+      motor1.reverse();
+      motor2.reverse();
+    });
+    $("#down").on("touchend mouseup",()=>{
+      motor1.stop();
+      motor2.stop();
+    });
+  }
+  </script>
+  </body>
+</html>
