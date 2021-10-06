@@ -1,0 +1,27 @@
+<!-- HTML Example -->
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.com/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@3.16.0/obniz.js"></script>
+</head>
+<body>
+
+<div id="obniz-debug"></div>
+<h1>LED</h1>
+
+<script>
+  var obniz = new Obniz("4099-9813");
+  obniz.onconnect = async function () {
+    var led = obniz.wired("LED", {anode:0, cathode:1});
+    var voltage=await obniz.ad2.getWait();
+    led.on();
+    obniz.ad2.start(function(voltage){
+    console.log("changed to "+voltage+" V")
+  })
+ }
+ 
+ 
+</script>
+</body>
+</html>
