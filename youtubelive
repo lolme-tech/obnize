@@ -8,15 +8,17 @@
   </head>
   <body>
       <div id="obniz-debug"></div>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/5qap5aO4i9A" 
-      title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-      allowfullscreen style="padding-left:270px;height:280px;"></iframe>
-      <button id="up" style="width:150px;height:100px;font-size:50px;margin:30px 200px 10px 160px;">↑</button><br>
-      <button id="left" style="width:150px;height:100px;font-size:50px;">←</button>
-      <button id="armon" style="width:150px;height:100px;font-size:50px;">展開</button>
-      <button id="right" style="width:150px;height:100px;font-size:50px;margin-bottom:10px;">→</button>
-      <button id="armoff" style="width:200px;height:100px;font-size:50px;margin-left:300px;">閉じる</button><br>
-      <button id="down" style="width:150px;height:100px;font-size:50px;margin-left:160px;">↓</button><br>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/J35kO2lDKUQ" title="YouTube video player" frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+      style="padding-left:270px;height:280px;"></iframe>
+      <button id="up" style="width:100px;height:70px;font-size:20px;margin:30px 110px 5px 105px;-webkit-user-select:none;"></button>
+      <span style="margin-left:110px;font-size:15px;-webkit-user-select:none;">展開</span>
+      <span style="margin-left:50px;font-size:15px;-webkit-user-select:none;">閉じる</span><br>
+      <button id="left" style="width:100px;height:70px;font-size:20px;-webkit-user-select:none;"></button>
+      <button id="right" style="width:100px;height:70px;font-size:20px;margin-left:100px;-webkit-user-select:none;"></button>
+      <button id="armon" style="width:100px;height:70px;font-size:20px;margin-left:100px;-webkit-user-select:none;"></button>
+      <button id="armoff" style="width:100px;height:70px;font-size:20px;-webkit-user-select:none;"></button><br>
+      <button id="down" style="width:100px;height:70px;font-size:20px;margin-left:105px;-webkit-user-select:none;"></button><br>
     <!--ここからjs-->
     <script>
     var obniz = new Obniz("OBNIZ_ID_HERE");
@@ -28,42 +30,43 @@
     //右側サーボモータ
     var rightservo = obniz.wired("ServoMotor", {gnd:9, vcc:10, signal:11});
     var motor1 = obniz.wired("DCMotor", {forward:4 , back:3 });
-    var motor2 = obniz.wired("DCMotor", {forward:8 , back:7 });
+    var motor2 = obniz.wired("DCMotor", {forward:7 , back:8 });
+    leftservo.angle(anglecount1);
+    rightservo.angle(anglecount2);
     //アーム展開
-    $("#armon").on("touchstart mousedown",()=>{
-      if(anglecount1!=20){
-        anglecount1-=5;
+    $("#armon").click(function() {
+      if(anglecount1!=20 && anglecount2!=120){
+        anglecount1-=20;
+        anglecount2+=20;
         leftservo.angle(anglecount1);
-      };
-      if(anglecount2!=150){
-        anglecount2+=5;
         rightservo.angle(anglecount2);
-      }
-    });
-    $("#armon").on("touchend mouseup",()=>{
-
-
+      };
     });
     //アーム閉じる20~120 50~150
-   armoff.addEventListener('click',function(){
-      while(anglecount1!=120 || anglecount2!=50)
-         anglecount1+=5;
-         anglecount2-=5;
-         leftservo.angle(anglecount1);
-         rightservo.angle(anglecount2);
-        });
+    $("#armoff").click(function() {
+      if(anglecount1!=120 && anglecount2!=50){
+      anglecount1+=20;
+      anglecount2-=20;
+      leftservo.angle(anglecount1);
+      rightservo.angle(anglecount2);
+      };
+    });
     //左
     $("#left").on("touchstart mousedown",()=>{
-      motor1.forward();
+      motor1.reverse();
+      motor2.forward();
     });
     $("#left").on("touchend mouseup",()=>{
       motor1.stop();
+      motor2.stop();
     });
     //右
     $("#right").on("touchstart mousedown",()=>{
-      motor2.forward();
+      motor1.forward();
+      motor2.reverse();
     });
     $("#right").on("touchend mouseup",()=>{
+      motor1.stop();
       motor2.stop();
     });
     //上
