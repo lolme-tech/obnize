@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+    <script src="https://unpkg.com/obniz@3.16.0/obniz.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+      <div id="obniz-debug"></div>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/5qap5aO4i9A" 
+      title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen style="padding-left:270px;height:280px;"></iframe>
+      <button id="up" style="width:150px;height:100px;font-size:50px;margin:30px 200px 10px 160px;">↑</button><br>
+      <button id="left" style="width:150px;height:100px;font-size:50px;">←</button>
+      <button id="armon" style="width:150px;height:100px;font-size:50px;">展開</button>
+      <button id="right" style="width:150px;height:100px;font-size:50px;margin-bottom:10px;">→</button>
+      <button id="armoff" style="width:200px;height:100px;font-size:50px;margin-left:300px;">閉じる</button><br>
+      <button id="down" style="width:150px;height:100px;font-size:50px;margin-left:160px;">↓</button><br>
+    <!--ここからjs-->
+    <script>
+    var obniz = new Obniz("OBNIZ_ID_HERE");
+    var anglecount1=20;
+    var anglecount2=150
+    obniz.onconnect = async function () {
+    //左側サーボモータ
+    var leftservo = obniz.wired("ServoMotor", {gnd:0, vcc:1, signal:2});
+    //右側サーボモータ
+    var rightservo = obniz.wired("ServoMotor", {gnd:9, vcc:10, signal:11});
+    var motor1 = obniz.wired("DCMotor", {forward:4 , back:3 });
+    var motor2 = obniz.wired("DCMotor", {forward:8 , back:7 });
+    //アーム展開
+    $("#armon").on("touchstart mousedown",()=>{
+      if(anglecount1!=20){
+        anglecount1-=5;
+        leftservo.angle(anglecount1);
+      };
+      if(anglecount2!=150){
+        anglecount2+=5;
+        rightservo.angle(anglecount2);
+      }
+    });
+    $("#armon").on("touchend mouseup",()=>{
+
+
+    });
+    //アーム閉じる20~120 50~150
+   armoff.addEventListener('click',function(){
+      while(anglecount1!=120 || anglecount2!=50)
+         anglecount1+=5;
+         anglecount2-=5;
+         leftservo.angle(anglecount1);
+         rightservo.angle(anglecount2);
+        });
+    //左
+    $("#left").on("touchstart mousedown",()=>{
+      motor1.forward();
+    });
+    $("#left").on("touchend mouseup",()=>{
+      motor1.stop();
+    });
+    //右
+    $("#right").on("touchstart mousedown",()=>{
+      motor2.forward();
+    });
+    $("#right").on("touchend mouseup",()=>{
+      motor2.stop();
+    });
+    //上
+    $("#up").on("touchstart mousedown",()=>{
+      motor1.forward();
+      motor2.forward();
+    });
+    $("#up").on("touchend mouseup",()=>{
+      motor1.stop();
+      motor2.stop();
+    });
+    //下
+    $("#down").on("touchstart mousedown",()=>{
+      motor1.reverse();
+      motor2.reverse();
+    });
+    $("#down").on("touchend mouseup",()=>{
+      motor1.stop();
+      motor2.stop();
+    });
+  }
+  </script>
+  </body>
+</html>
