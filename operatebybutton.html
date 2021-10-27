@@ -8,14 +8,14 @@
   </head>
   <body>
       <div id="obniz-debug"></div>
-      <!--カメラ映像<iframe src="http://192.168.137.78" width="1000" height="300"></iframe>-->
-      <!--width:150px;height:100px;font-size:50px;-->
-      <button id="up" style="width:100px;height:70px;font-size:20px;margin:30px 110px 10px 105px;">↑</button><br>
-      <button id="left" style="width:100px;height:70px;font-size:20px;">←</button>
-      <button id="armon" style="width:100px;height:70px;font-size:20px;">展開</button>
-      <button id="right" style="width:100px;height:70px;font-size:20px;margin-bottom:10px;">→</button>
-      <button id="armoff" style="width:150px;height:100px;font-size:20px;margin-left:100px;">閉じる</button><br>
-      <button id="down" style="width:100px;height:70px;font-size:20px;margin-left:105px;">↓</button><br>
+      <button id="up" style="width:100px;height:70px;font-size:20px;margin:30px 110px 5px 105px;-webkit-user-select:none;"></button>
+      <span style="margin-left:110px;font-size:15px;-webkit-user-select:none;">展開</span>
+      <span style="margin-left:50px;font-size:15px;-webkit-user-select:none;">閉じる</span><br>
+      <button id="left" style="width:100px;height:70px;font-size:20px;-webkit-user-select:none;"></button>
+      <button id="right" style="width:100px;height:70px;font-size:20px;margin-left:100px;-webkit-user-select:none;"></button>
+      <button id="armon" style="width:100px;height:70px;font-size:20px;margin-left:100px;-webkit-user-select:none;"></button>
+      <button id="armoff" style="width:100px;height:70px;font-size:20px;-webkit-user-select:none;"></button><br>
+      <button id="down" style="width:100px;height:70px;font-size:20px;margin-left:105px;-webkit-user-select:none;"></button><br>
     <!--ここからjs-->
     <script>
     var obniz = new Obniz("OBNIZ_ID_HERE");
@@ -27,7 +27,7 @@
     //右側サーボモータ
     var rightservo = obniz.wired("ServoMotor", {gnd:9, vcc:10, signal:11});
     var motor1 = obniz.wired("DCMotor", {forward:4 , back:3 });
-    var motor2 = obniz.wired("DCMotor", {forward:8 , back:7 });
+    var motor2 = obniz.wired("DCMotor", {forward:7 , back:8 });
     leftservo.angle(anglecount1);
     rightservo.angle(anglecount2);
     //アーム展開
@@ -50,16 +50,20 @@
     });
     //左
     $("#left").on("touchstart mousedown",()=>{
-      motor1.forward();
+      motor1.reverse();
+      motor2.forward();
     });
     $("#left").on("touchend mouseup",()=>{
       motor1.stop();
+      motor2.stop();
     });
     //右
     $("#right").on("touchstart mousedown",()=>{
-      motor2.forward();
+      motor1.forward();
+      motor2.reverse();
     });
     $("#right").on("touchend mouseup",()=>{
+      motor1.stop();
       motor2.stop();
     });
     //上
